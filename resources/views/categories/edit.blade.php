@@ -3,9 +3,9 @@
 @section('title') Edit @endsection
 @section('content')
 
-<form method="POST" 
+<form method="POST"
 action="{{route('categories.update', $category['id'])}}">
-      @csrf 
+      @csrf
       @method('PUT')
     <div class="mb-3">
       <label class="form-label">Title</label>
@@ -23,4 +23,13 @@ action="{{route('categories.update', $category['id'])}}">
 
     <button type="submit" class="btn btn-warning">Update</button>
   </form>
+  @if ($errors->any())
+     <div class="alert alert-danger">
+         <ul>
+             @foreach ($errors->all() as $error)
+                 <li>{{ $error }}</li>
+             @endforeach
+         </ul>
+     </div>
+ @endif
 @endsection

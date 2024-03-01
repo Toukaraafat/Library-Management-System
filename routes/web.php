@@ -29,4 +29,4 @@ Route::get('/categories/{category}'/*url dynamic parameter */ , [CategoryControl
 Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
 Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
 Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
-//lw ktbt esm ghalat bttl3 exception/errors page  
+//lw ktbt esm ghalat bttl3 exception/errors page
