@@ -3,7 +3,7 @@
 @section('title') Create @endsection
 @section('content')
 
-<form method="POST" 
+<form method="POST"
       action="{{route('categories.store')}}">
       @csrf {{--  directive la ay form by7l moshkelt l cross site request forgery  --}}
     <div class="mb-3">
@@ -20,4 +20,16 @@
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
+
+ @if ($errors->any())
+     <div class="alert alert-danger">
+         <ul>
+             @foreach ($errors->all() as $error)
+                 <li>{{ $error }}</li>
+             @endforeach
+         </ul>
+     </div>
+ @endif
 @endsection
+
+
