@@ -6,27 +6,59 @@ use Illuminate\Http\Request;
 
 class AuthorController extends Controller
 {
-    // ...
+    public function index()
+    {
+        $authors = Author::all();
+        return view('authors.index', compact('authors'));
+    }
+
+    public function create()
+    {
+        return view('authors.create');
+    }
 
     public function store(Request $request)
     {
-        $author = new Author();
-        $author->name = $request->input('name');
-        $author->save();
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:20',
+            'num_books' => 'required|integer',
+        ]);
 
-        return response()->json($author, 201);
+        $author = Author::create($validatedData);
+
+        return redirect()->route('authors.index');
+    }
+
+    public function show($id)
+    {
+        $author = Author::findOrFail($id);
+        return view('authors.show', compact('author'));
+    }
+
+    public function edit($id)
+    {
+        $author = Author::findOrFail($id);
+        return view('authors.edit', compact('author'));
     }
 
     public function update(Request $request, $id)
     {
-        $author = Author::findOrFail($id);
-        $author->name = $request->input('name');
-        $author->num_books = $request->input('num_books', 0);
-        $author->save();
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:20',
+            'num_books' => 'required|integer',
+        ]);
 
-        return response()->json($author, 200);
+        $author = Author::findOrFail($id);
+        $author->update($validatedData);
+
+        return redirect()->route('authors.index');
     }
 
-    // ...
+    public function destroy($id)
+    {
+        $author = Author::findOrFail($id);
+        $author->delete();
 
+        return redirect()->route('authors.index');
+    }
 }

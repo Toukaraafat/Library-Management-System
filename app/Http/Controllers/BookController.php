@@ -4,73 +4,79 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use Illuminate\Http\Request;
-
+use App\Models\Author;
+use App\Models\Category;
 class BookController extends Controller
 {
+
     public function index()
     {
-        $books = Book::with('author', 'categories')->get();
-        return response()->json($books, 200);
+        $books = Book::all();
+        return view('books.index', compact('books'));
+    }
+
+    public function create()
+    {
+        $authors = Author::all();
+        $categories = Category::all();
+
+        return view('books.create', compact('authors', 'categories'));
     }
 
     public function store(Request $request)
     {
-        $book = Book::create($request->all());
-        return response()->json($book, 201);
+        $validatedData = $request->validate([
+            'name' => 'required|max:30',
+            'author_id' => 'required|exists:authors,id',
+            'image' => 'required|image|max:15',
+            'description' => 'required',
+            'categories' => 'required|array',
+        ]);
+
+        $book = Book::create($validatedData);
+        $book->categories()->attach($request->input('categories'));
+
+        return redirect()->route('books.index');
     }
 
     public function show($id)
     {
-        $book = Book::with('author', 'categories')->findOrFail($id);
-        return response()->json($book, 200);
+        $book = Book::findOrFail($id);
+        return view('books.show', compact('book'));
+    }
+
+    public function edit($id)
+    {
+        $book = Book::findOrFail($id);
+        $authors = Author::all();
+        $categories = Category::all();
+
+        return view('books.edit', compact('book', 'authors', 'categories'));
     }
 
     public function update(Request $request, $id)
     {
+        $validatedData = $request->validate([
+            'name' => 'required|max:30',
+            'author_id' => 'required|exists:authors,id',
+            'image' => 'required|image|max:15',
+            'description' => 'required',
+            'categories' => 'required|array',
+        ]);
+
         $book = Book::findOrFail($id);
-        $book->update($request->all());
-        return response()->json($book, 200);
+        $book->update($validatedData);
+        $book->categories()->sync($request->input('categories'));
+
+        return redirect()->route('books.index');
     }
 
     public function destroy($id)
     {
-        Book::destroy($id);
-        return response()->json(null, 204);
+        $book = Book::findOrFail($id);
+        $book->categories()->detach();
+        $book->delete();
+
+        return redirect()->route('books.index');
     }
-    public function listBooks(Request $request)
-    {
-        $query = Book::with('author', 'categories');
-
-        // Order by
-        if ($request->has('order_by')) {
-            $orderField = $request->input('order_by');
-            $query->orderBy($orderField, 'asc');
-        }
-
-        // Search by title
-        if ($request->has('title')) {
-            $title = $request->input('title');
-            $query->where('name', 'like', "%$title%");
-        }
-
-        // Search by author
-        if ($request->has('author')) {
-            $author = $request->input('author');
-            $query->whereHas('author', function ($query) use ($author) {
-                $query->where('name', 'like', "%$author%");
-            });
-        }
-
-        // Filter by category
-        if ($request->has('category')) {
-            $category = $request->input('category');
-            $query->whereHas('categories', function ($query) use ($category) {
-                $query->where('name', $category);
-            });
-        }
-
-        $books = $query->get();
-        return response()->json($books, 200);
-    }
-
 }

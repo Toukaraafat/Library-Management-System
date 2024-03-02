@@ -1,29 +1,35 @@
+@extends('layouts.app')
 
-@extends('Layouts.app')
-@section('title') Edit @endsection
 @section('content')
+    <h1>Edit Book - {{ $book->name }}</h1>
 
-<form method="POST" 
-action="{{route('posts.update', $post->id)}}">
-      @csrf {{--  directive la ay form by7l moshkelt l cross site request forgery  --}}
-      @method('PUT')
-    <div class="mb-3">
-      <label class="form-label">Title</label>
-      <input type="text" class="form-control" name="title" value="{{$post->title}}"/>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Description</label>
-      <textarea class="form-control" rows="3" name="description" >{{$post->description}}</textarea>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Post Creator</label>
-        <select class="form-select" name="postCreator">
-          @foreach($users as $user)
-          <option value="{{$user->id}}">{{$user->name}}</option>
-          @endforeach
+    <form action="{{ route('books.update', $book->id) }}" method="POST">
+        @csrf
+        @method('PUT')
 
+        <label for="name">Name:</label>
+        <input type="text" name="name" value="{{ $book->name }}" required>
+
+        <label for="author_id">Author:</label>
+        <select name="author_id" required>
+            @foreach ($authors as $author)
+                <option value="{{ $author->id }}" @if($book->author_id == $author->id) selected @endif>{{ $author->name }}</option>
+            @endforeach
         </select>
-      </div>
-    <button type="submit" class="btn btn-warning">Update</button>
-  </form>
+
+        <label for="image">Image URL:</label>
+        <input type="url" name="image" value="{{ $book->image }}" required>
+
+        <label for="description">Description:</label>
+        <textarea name="description" required>{{ $book->description }}</textarea>
+
+        <label for="categories">Categories:</label>
+        <select name="categories[]" multiple required>
+            @foreach ($categories as $category)
+                <option value="{{ $category->id }}" @if(in_array($category->id, $book->categories->pluck('id')->toArray())) selected @endif>{{ $category->name }}</option>
+            @endforeach
+        </select>
+
+        <button type="submit">Update Book</button>
+    </form>
 @endsection

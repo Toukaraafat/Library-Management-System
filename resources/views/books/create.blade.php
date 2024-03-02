@@ -1,27 +1,33 @@
+@extends('layouts.app')
 
-@extends('Layouts.app')
-@section('title') Create @endsection
 @section('content')
+    <h1>Create New Book</h1>
 
-<form method="POST" 
-      action="{{route('posts.store')}}">
-      @csrf {{--  directive la ay form by7l moshkelt l cross site request forgery  --}}
-    <div class="mb-3">
-      <label class="form-label">Title</label>
-      <input type="text" class="form-control" name="title"/>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Description</label>
-      <textarea class="form-control" rows="3" name="description"></textarea>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Post Creator</label>
-        <select class="form-select" name="postCreator">
-          @foreach($users as $user)
-          <option value="{{$user->id}}">{{$user->name}}</option>
-          @endforeach
+    <form action="{{ route('books.store') }}" method="POST">
+        @csrf
+        <label for="name">Name:</label>
+        <input type="text" name="name" required>
+
+        <label for="author_id">Author:</label>
+        <select name="author_id" required>
+            @foreach ($authors as $author)
+                <option value="{{ $author->id }}">{{ $author->name }}</option>
+            @endforeach
         </select>
-      </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
+
+        <label for="image">Image URL:</label>
+        <input type="url" name="image" required>
+
+        <label for="description">Description:</label>
+        <textarea name="description" required></textarea>
+
+        <label for="categories">Categories:</label>
+        <select name="categories[]" multiple required>
+            @foreach ($categories as $category)
+                <option value="{{ $category->id }}">{{ $category->name }}</option>
+            @endforeach
+        </select>
+
+        <button type="submit">Create Book</button>
+    </form>
 @endsection
