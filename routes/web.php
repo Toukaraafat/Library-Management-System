@@ -1,7 +1,10 @@
 <?php
 
+
 use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\AuthorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +24,9 @@ Route::get('/'/* uri */ , function () { // class :: -> scope reslution / call ba
 
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-
+Route::resource('authors', AuthorController::class);
+Route::resource('books', BookController::class);
+Route::get('/books/list', [BookController::class, 'listBooks']);
 Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
 
 Route::get('/categories/{category}'/*url dynamic parameter */ , [CategoryController::class, 'show'])->name('categories.show');
