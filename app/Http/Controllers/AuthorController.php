@@ -12,10 +12,7 @@ class AuthorController extends Controller
         return view('authors.index', compact('authors'));
     }
 
-    public function create()
-    {
-        return view('authors.create');
-    }
+
 
     public function store(Request $request)
     {

@@ -1,33 +1,49 @@
-@extends('layouts.app')
 
+@extends('Layouts.app')
+@section('title') Create @endsection
 @section('content')
-    <h1>Create New Book</h1>
 
-    <form action="{{ route('books.store') }}" method="POST">
-        @csrf
-        <label for="name">Name:</label>
-        <input type="text" name="name" required>
+<form
+      action="{{route('books.store')}}" method="post" enctype="multipart/form-data">
+      @csrf {{--  directive la ay form by7l moshkelt l cross site request forgery  --}}
+    <div class="mb-3">
+      <label class="form-label">name</label>
+      <input type="text" class="form-control" name="name"/>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">author name</label>
+      <input type="text" class="form-control" name="author"/>
+    </div>
 
-        <label for="author_id">Author:</label>
-        <select name="author_id" required>
-            @foreach ($authors as $author)
-                <option value="{{ $author->id }}">{{ $author->name }}</option>
-            @endforeach
-        </select>
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <textarea class="form-control" rows="3" name="description"></textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">upload your image</label>
+      <input type="file"  class="form-control" name="image" >
+    </div>
+    <select class="form-select" aria-label="Default select example" name="category">
+  <option selected>select category</option>
+  <option value="cat 1">cat1</option>
+  <option value="cat 2">cat2</option>
+  <option value="cat3">cat3</option>
 
-        <label for="image">Image URL:</label>
-        <input type="url" name="image" required>
+    </select>
 
-        <label for="description">Description:</label>
-        <textarea name="description" required></textarea>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
 
-        <label for="categories">Categories:</label>
-        <select name="categories[]" multiple required>
-            @foreach ($categories as $category)
-                <option value="{{ $category->id }}">{{ $category->name }}</option>
-            @endforeach
-        </select>
-
-        <button type="submit">Create Book</button>
-    </form>
+ @if ($errors->any())
+     <div class="alert alert-danger">
+         <ul>
+             @foreach ($errors->all() as $error)
+                 <li>{{ $error }}</li>
+             @endforeach
+         </ul>
+     </div>
+ @endif
 @endsection
+
+
+

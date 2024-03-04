@@ -1,6 +1,10 @@
 @extends('Layouts.app')
 @section('title') categories @endsection
 @section('content')
+@if(auth()->guest())
+    {{-- If the user is a guest (not logged in), redirect to the login page --}}
+    <script>window.location.href = "{{ route('login') }}";</script>
+@endif
 <div class="container row ">
     <div class="text-center col-3 mt-4">
         <a href="{{route('categories.create')}}" class="btn btn-primary">Create category</a>

@@ -9,11 +9,47 @@ use App\Models\Category;
 class BookController extends Controller
 {
 
-    public function index()
+    public function index(request $request)
     {
-        $books = Book::all();
-        return view('books.index', compact('books'));
+
+        $query = Book::query();
+
+        // Searching
+        $search = $request->input('search');
+        if ($search) {
+            $query->where('name', 'LIKE', "%$search%");
+        }
+
+        // Sorting
+        $sort = $request->input('sort');
+
+        if ($sort=="name") {
+            $query->orderBy($sort);
+        }
+        if ($sort=="created_at") {
+            $query->orderByDesc($sort);
+        }
+        else {
+        $booksdromdb = $query->get();
+
+        return view('books.index', ['books' => $booksdromdb]);
     }
+    $booksdromdb = $query->get();
+
+    return view('books.index', ['books' => $booksdromdb]);
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function create()
     {
@@ -25,18 +61,34 @@ class BookController extends Controller
 
     public function store(Request $request)
     {
+
+        $name = request()->name;
+        $author=$request->author;
+        $desc = request()->description;
+        $category = $request->category;
+        // Move the uploaded file to the desired directory
+        $imageFileName = now()->timestamp . '.' . $request->file('image')->getClientOriginalExtension();
+        $request->file('image')->move(public_path('/dist/img/products'), $imageFileName);
+
+        $book = new Book;
+        $book->name = $name;
+        $book->description = $desc;
+        $book->image = $imageFileName;
+        $book->category=$category;
+        $book->author = $author;
+
         $validatedData = $request->validate([
             'name' => 'required|max:30',
-            'author_id' => 'required|exists:authors,id',
-            'image' => 'required|image|max:15',
+            'author' => 'required',
             'description' => 'required',
-            'categories' => 'required|array',
+            'category' => 'required',
         ]);
 
-        $book = Book::create($validatedData);
-        $book->categories()->attach($request->input('categories'));
 
-        return redirect()->route('books.index');
+        $book->save();
+
+
+        return to_route('books.index');
     }
 
     public function show($id)
