@@ -52,7 +52,7 @@
 
 
 
-                        <div class="form-group">
+                    {{--    <div class="form-group">
                             <label for="categories">{{ __('Categories') }}</label>
                             <select id="categories" class="form-control @error('categories') is-invalid @enderror" name="categories[]">
                                 @foreach ($categories as $category)
@@ -64,7 +64,7 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
-                        </div>
+                        </div>--}}
 
                         <div class="form-group">
                             <label for="categories">{{ __('Categories') }}</label>

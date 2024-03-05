@@ -12,6 +12,8 @@ class BookController extends Controller
     public function index(Request $request)
     {
         $books = Book::query();
+        $categories = Category::all();
+
         $search = $request->input('search');
         if ($search) {
             $books->where('name', 'LIKE', "%$search%");
@@ -28,13 +30,26 @@ class BookController extends Controller
             $books->orderByDesc($sort);
 
         }
+        $categoryFilter = $request->input('category');
+        if ($categoryFilter && $categoryFilter !== 'All Categories') {
+
+
+            $books = Book::where('category', $categoryFilter);
+        }
+            // ($selectedCategory) {
+            //     $books->where('category', $selectedCategory);
+            // }} 
+
+            
+        
+
         else {
             $books = $books->get();
 
-            return view('books.index', ['books' => $books]);
+            return view('books.index', ['books' => $books,'categories'=>$categories]);
         }
         $books = $books->get();
-        return view('books.index', ['books' => $books]);
+        return view('books.index', ['books' => $books,'categories'=>$categories]);
 
     }
 

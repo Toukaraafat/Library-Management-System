@@ -25,6 +25,28 @@
         </form>
     </div>
 
+  
+   
+
+
+
+
+
+
+     <label for="category">Filter by Category:</label>
+     <form class="" id="filterForm" action="{{ route('books.index') }}" method="GET">
+
+    <select name="category" id="category">
+        <option value="">All Categories</option>
+        @foreach ($categories as $category)
+            <option value="{{ $category->name }}" {{ request('category') == $category->name ? 'selected' : '' }}>
+                {{ $category->name }}
+            </option>
+        @endforeach
+    </select> 
+    </form>
+
+
 
     <div class="row">
 
@@ -58,6 +80,12 @@
     document.getElementById('sort').addEventListener('change', function() {
         console.log("hello");
         document.getElementById('sortForm').submit();
+    });
+</script>
+<script>
+    document.getElementById('category').addEventListener('change', function() {
+        console.log("hello");
+        document.getElementById('filterForm').submit();
     });
 </script>
 <script>
