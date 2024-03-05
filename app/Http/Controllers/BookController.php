@@ -52,6 +52,7 @@ class BookController extends Controller
         return view('books.index', ['books' => $books,'categories'=>$categories]);
 
     }
+    
 
     public function create()
     {
