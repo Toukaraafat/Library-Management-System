@@ -21,7 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role', // Add the role attribute here
     ];
+    
 
     /**
      * The attributes that should be hidden for serialization.
@@ -42,4 +44,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function getIsSuperAdminAttribute()
+    {
+        // Assuming 'admin' and 'super_admin' are the roles that represent super admin privileges
+        return $this->role === 'admin' || $this->role === 'super_admin';
+    }
 }

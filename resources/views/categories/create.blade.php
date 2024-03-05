@@ -1,35 +1,43 @@
+@extends('layouts.app')
 
-@extends('Layouts.app')
-@section('title') Create @endsection
 @section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">{{ __('Create Category') }}</div>
 
-<form method="POST"
-      action="{{route('categories.store')}}">
-      @csrf {{--  directive la ay form by7l moshkelt l cross site request forgery  --}}
-    <div class="mb-3">
-      <label class="form-label">Title</label>
-      <input type="text" class="form-control" name="name"/>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Description</label>
-      <textarea class="form-control" rows="3" name="description"></textarea>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Number of books</label>
-      <input type="text" class="form-control" name="num_books"/>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
+                <div class="card-body">
+                    <form method="POST" action="{{ route('categories.store') }}">
+                        @csrf
 
- @if ($errors->any())
-     <div class="alert alert-danger">
-         <ul>
-             @foreach ($errors->all() as $error)
-                 <li>{{ $error }}</li>
-             @endforeach
-         </ul>
-     </div>
- @endif
+                        <div class="form-group">
+                            <label for="name">{{ __('Name') }}</label>
+                            <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autofocus>
+                            @error('name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">{{ __('Description') }}</label>
+                            <textarea id="description" class="form-control @error('description') is-invalid @enderror" name="description" required>{{ old('description') }}</textarea>
+                            @error('description')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Create Category') }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
-
-
