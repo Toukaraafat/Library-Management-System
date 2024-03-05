@@ -9,10 +9,33 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::all();
-        return view('books.index', compact('books'));
+        $books = Book::query();
+        $search = $request->input('search');
+        if ($search) {
+            $books->where('name', 'LIKE', "%$search%");
+
+        }
+
+        // Sorting
+        $sort = $request->input('sort');
+
+        if ($sort=="name") {
+            $books->orderBy($sort);
+        }
+        if ($sort=="created_at") {
+            $books->orderByDesc($sort);
+
+        }
+        else {
+            $books = $books->get();
+
+            return view('books.index', ['books' => $books]);
+        }
+        $books = $books->get();
+        return view('books.index', ['books' => $books]);
+
     }
 
     public function create()

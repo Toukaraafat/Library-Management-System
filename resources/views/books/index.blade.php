@@ -4,8 +4,34 @@
 <div class="container">
     <h1>Books</h1>
     <a href="{{ route('books.create') }}" class="btn btn-primary mb-3">Add Book</a>
+    <div class="text-center col-4  mt-4">
+
+        <form class="" id="sortForm" action="{{ route('books.index') }}" method="GET">
+            <!-- <label>sort by :</label> -->
+            <select class="form-control" name="sort" id="sort">
+            <option value="" selected>sort by:default</option>
+                <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Sort by Name</option>
+                <option value="created_at" {{ request('sort') == 'created_at' ? 'selected' : '' }}>latest</option>
+                <!-- Add more options as needed -->
+
+            </select>
+        </form>
+
+    </div>
+    <div class="text-center col-5  mt-4">
+
+        <form class=" " id="searchForm" action="{{ route('books.index') }}" method="GET">
+            <input id="search" class="form-control " type="text" placeholder="search by name" name="search" value="{{ request('search') }}">
+        </form>
+    </div>
+
 
     <div class="row">
+
+
+
+
+
         @foreach($books as $book)
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
@@ -27,4 +53,17 @@
         @endforeach
     </div>
 </div>
+
+<script>
+    document.getElementById('sort').addEventListener('change', function() {
+        console.log("hello");
+        document.getElementById('sortForm').submit();
+    });
+</script>
+<script>
+    document.getElementById('search').addEventListener('blur', function() {
+        console.log("hello");
+        document.getElementById('searchForm').submit();
+    });
+</script>
 @endsection
